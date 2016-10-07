@@ -35,35 +35,37 @@
 ### 用法
 插入逻辑以拦截对函数的调用. 思路: 装饰器返回了一个包装器, 包装器把最初的函数保持到一个封闭的作用域中:
 
+#### 一般形式
 ```python
-def decorator(F):
-    def wrapper(*args):
+def decorator(F):                 # 位置应该在@装饰器之前
+    def wrapper(*args):           # 定义包装器,位置应该在调用包装器之前
         # 使用F和参数args
         # 函数F(*args)调用原始函数
-    return wrapper
+    return wrapper                # 包装器调用
     
-@decorator 
-def func(x, y):
+@decorator                        # 等价于 func = decorator(func)
+def func(x, y):                   # func被传递给装饰器的F
     ...
   
-func(6, 7)
-    
+func(6, 7)                        # 6, 7被传递给包装器参数*args,等价于 decorator(func)(6, 7)
     
 ```
+
+#### 具体使用
 例2
 ```python
-def decorator(Func):
-    def new_Func(a, b):
-        print("input", a, b)
+def decorator(Func):      
+    def new_Func(a, b):            # 定义包装器new_decorator
+        print("input", a, b)     
         return Func(a, b)
-    return new_Func
+    return new_Func                # 调用包装器
 
-@decorator # 装饰器语法糖
-def square_sum(a,b):
+@decorator # 装饰器语法糖            # decorator(square_sum)
+def square_sum(a,b):        
     return a**2 + b**2
 
 # square_sum = decorator(square_sum) # 和装饰器语法糖的作用一样
-print(square_sum(2, 3))
-```
+print(square_sum(2, 3))              # 等价于 decorator(square_sum)(2, 3)
+``` 
 
 
